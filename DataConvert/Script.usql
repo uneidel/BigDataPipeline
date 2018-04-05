@@ -1,0 +1,31 @@
+﻿USE [master];
+REFERENCE ASSEMBLY [Newtonsoft.Json];
+REFERENCE ASSEMBLY adasearchoutputter;
+@profiles =
+     EXTRACT Useruuid   string,
+             Gender     string,
+             Age        string,
+             country    string,
+             signup     string
+     FROM "c://local//Recommendation//usersha1-profile.tsv"
+     USING Extractors.Tsv();
+ 
+@usersfromger = SELECT Useruuid as User, 
+                       Gender, 
+                       Age, 
+                       country as Country, 
+                       signup 
+                FROM @profiles
+                WHERE Country == "GERMANY";
+
+@results =
+     PROCESS @usersfromger
+     PRODUCE User, Gender,Age, country, signup
+     USING new ContosoPoC.AzureSearchOutputter("uneidel","063E29A00269904714A006EFE246EAD1","testdata", true);
+
+
+
+OUTPUT @results
+TO "c://local//Recommendation//searchinputforgermany.csv"
+USING Outputters.Csv();
+    

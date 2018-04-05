@@ -1,0 +1,15 @@
+﻿
+<cool-infinite-grid [itemIterator]="movieIterator" [itemHeight]="200" [itemWidth]="200" [itemSpace]="10">
+    <template let-item>
+        <div style="box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);transition: 0.3s;border-radius: 5px;">
+            <img height="128" src="/assets/Video-film.svg.png" style="width:100%" />
+            
+            <div class="container">
+                <b>{{ item | split: "::":1 | truncate: 20  }}</b>
+                <p>{{ item | split: "::":2 | split: "|":1 }}</p>
+            </div>
+            <button (click)="DoAction(item)">marked viewed</button>
+        </div>
+       
+    </template>
+</cool-infinite-grid>

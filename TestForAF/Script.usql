@@ -1,0 +1,12 @@
+﻿
+    
+@x = SELECT * FROM (VALUES( "A", 10, 20), ("A", 11, 21), ("B", 10, 30), ("B", 100, 200)) AS T(name, value1, value2);
+
+// Generate the script to do partitioned output based on name column:
+
+@stmts = 
+  SELECT "OUTPUT (SELECT value1, value2 FROM @x WHERE name == \""+name+"\" TO \"/output/"+name+".csv\") USING Outputters.Csv();" AS output 
+  FROM (SELECT DISTINCT name FROM @x) AS x;
+
+OUTPUT @stmts TO "/output/genscript.usql" 
+USING Outputters.Text(delimiter:' ', quoting:false);
